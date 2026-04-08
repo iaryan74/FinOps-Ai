@@ -31,7 +31,5 @@ ANOMALY_Z_THRESHOLD = 2.5      # Z-score threshold for anomaly detection
 
 # ── Server ─────────────────────────────────────────────
 CORS_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:5173",
+    "*",
 ]
