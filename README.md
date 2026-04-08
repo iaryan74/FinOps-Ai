@@ -13,13 +13,17 @@ Cloud FinOps AI Optimizer is a full-stack SaaS application designed to help engi
 ### Key Capabilities
 - **Real-time Cost Monitoring** — Daily and monthly cloud spending visualization
 - **AI Cost Prediction** — Linear Regression model forecasting next 7-30 days
+- **AI Decision Mode** — Modal aggregating resource waste into an actionable execution plan
+- **What-If Cost Simulator** — Interactive sliders computing potential real-time UI savings
+- **Impact Overview Panel** — Visual breakdown of Money Wasted, Saved, and Potential Savings
 - **Anomaly Detection** — Dual strategy (Z-score + Isolation Forest) to identify cost spikes
 - **Idle Resource Detection** — Identifies underutilized EC2 instances wasting money
 - **Smart Recommendations** — AI-driven suggestions with estimated savings per action
 - **Budget Management** — Set limits, track usage, and receive threshold alerts
-- **AI Insights** — Human-readable analysis of spending patterns
+- **AI Insights** — Senior architectural text generation based on (Cause → Impact → Action)
 
 ---
+
 
 ## 🧱 Tech Stack
 
