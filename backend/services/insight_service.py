@@ -27,9 +27,9 @@ def generate_insights() -> Dict:
             "icon": "📊",
             "title": "Top Cost Driver",
             "description": (
-                f"Your {top_service['service']} cost dominates {top_service['percentage']}% "
-                f"of total spending at ${top_service['total']:,.2f} this period. "
-                f"Focus optimization efforts here for maximum impact."
+                f"Cause: Your {top_service['service']} dominates {top_service['percentage']}% of total spending this period. "
+                f"Impact: High cost concentration (${top_service['total']:,.2f}). "
+                f"Action: Audit {top_service['service']} usage patterns immediately to identify scaling inefficiencies."
             ),
             "category": "cost_analysis",
             "impact": "high",
@@ -44,36 +44,36 @@ def generate_insights() -> Dict:
 
         if change_pct > 5:
             insights.append({
-                "icon": "📈",
-                "title": "Costs Are Rising",
+                "icon": "💥",
+                "title": "Severe Cost Drift Detected",
                 "description": (
-                    f"Your costs increased {change_pct:.1f}% month-over-month "
-                    f"(${previous:,.2f} → ${current:,.2f}). Review recent deployments "
-                    f"and scaling events to identify the cause."
+                    f"Cause: Sustained elevated usage caused a {change_pct:.1f}% month-over-month increase. "
+                    f"Impact: Spending rose from ${previous:,.2f} to ${current:,.2f}, directly threatening budget thresholds. "
+                    f"Action: Implement aggressive resource scaling optimization and investigate recent deployments."
                 ),
                 "category": "trend",
                 "impact": "high",
             })
         elif change_pct < -5:
             insights.append({
-                "icon": "📉",
-                "title": "Costs Are Decreasing",
+                "icon": "✅",
+                "title": "Optimization Success",
                 "description": (
-                    f"Great news! Costs dropped {abs(change_pct):.1f}% month-over-month "
-                    f"(${previous:,.2f} → ${current:,.2f}). Your optimization efforts "
-                    f"are paying off."
+                    f"Cause: Successful implementation of scaling policies dropped costs by {abs(change_pct):.1f}%. "
+                    f"Impact: Monthly bill reduced from ${previous:,.2f} to ${current:,.2f}. "
+                    f"Action: Continue monitoring and maintain current automated lifecycle policies."
                 ),
                 "category": "trend",
                 "impact": "positive",
             })
         else:
             insights.append({
-                "icon": "➡️",
-                "title": "Costs Are Stable",
+                "icon": "⚖️",
+                "title": "Spending Baseline Stable",
                 "description": (
-                    f"Cloud spending is stable with only {abs(change_pct):.1f}% change "
-                    f"month-over-month (${previous:,.2f} → ${current:,.2f}). "
-                    f"A good time to focus on proactive optimization."
+                    f"Cause: Workloads are operating within a strict {abs(change_pct):.1f}% variance threshold. "
+                    f"Impact: High cost predictability (${current:,.2f}/mo). "
+                    f"Action: Shift focus toward proactive reserved instance purchasing to lock in discounts."
                 ),
                 "category": "trend",
                 "impact": "neutral",
@@ -85,12 +85,12 @@ def generate_insights() -> Dict:
         waste = idle_data["total_monthly_waste"]
         count = len(idle_data["idle_resources"])
         insights.append({
-            "icon": "💤",
-            "title": "Idle Resources Detected",
+            "icon": "⚠️",
+            "title": "Critical Cloud Waste",
             "description": (
-                f"{count} EC2 instances are running with less than 5% CPU utilization, "
-                f"wasting an estimated ${waste:,.2f}/month. Stopping these could be your "
-                f"quickest cost optimization win."
+                f"Cause: {count} EC2 instances are actively running with compute utilization below 5%. "
+                f"Impact: Haemorrhaging an estimated ${waste:,.2f} per month in pure waste. "
+                f"Action: Terminate or stop these instances to realize immediate capital recapture."
             ),
             "category": "waste",
             "impact": "high",
@@ -101,12 +101,12 @@ def generate_insights() -> Dict:
     if recs["total_potential_savings"] > 0:
         savings = recs["total_potential_savings"]
         insights.append({
-            "icon": "💰",
-            "title": "Savings Opportunity Identified",
+            "icon": "💡",
+            "title": "Actionable Savings Pool",
             "description": (
-                f"Our analysis identified potential savings of ${savings:,.2f}/month "
-                f"across {len(recs['recommendations'])} optimization opportunities. "
-                f"Check the Recommendations panel for actionable steps."
+                f"Cause: AI engine identified {len(recs['recommendations'])} structural optimization opportunities. "
+                f"Impact: Potential immediate recapture of ${savings:,.2f}/month. "
+                f"Action: Review and execute pending recommendations in the AI Decision Mode."
             ),
             "category": "savings",
             "impact": "high",
@@ -117,12 +117,12 @@ def generate_insights() -> Dict:
         top_two_pct = sum(s["percentage"] for s in breakdown[:2])
         if top_two_pct > 70:
             insights.append({
-                "icon": "⚖️",
-                "title": "Spending Concentration Risk",
+                "icon": "🔍",
+                "title": "Architecture Monoculture Risk",
                 "description": (
-                    f"Top 2 services account for {top_two_pct:.0f}% of your cloud spend. "
-                    f"This concentration means cost spikes in {breakdown[0]['service']} or "
-                    f"{breakdown[1]['service']} could significantly impact your budget."
+                    f"Cause: {top_two_pct:.0f}% of enterprise cloud footprint is concentrated in just 2 services. "
+                    f"Impact: High vulnerability. Any pricing changes or usage spikes in {breakdown[0]['service']} or {breakdown[1]['service']} will deeply harm margins. "
+                    f"Action: Diversify architecture or aggressively negotiate reserved pricing tiers."
                 ),
                 "category": "risk",
                 "impact": "medium",
@@ -130,12 +130,12 @@ def generate_insights() -> Dict:
 
     # ── 6. Weekend Optimization ────────────────────────
     insights.append({
-        "icon": "🌙",
-        "title": "Weekend Optimization Opportunity",
+        "icon": "⏱️",
+        "title": "Compute Idle Hours",
         "description": (
-            "Non-production workloads (dev, staging, testing) can be automatically "
-            "shut down during weekends. Implement scheduled scaling to save 20-30% "
-            "on non-critical compute costs."
+            "Cause: Non-production environments are running uninterrupted during weekends. "
+            "Impact: Roughly 28% of development compute spend is wasted on idle time. "
+            "Action: Automate an AWS Lambda scheduler to stop non-prod tagged instances Friday evening."
         ),
         "category": "optimization",
         "impact": "medium",

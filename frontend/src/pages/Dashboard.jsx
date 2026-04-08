@@ -16,6 +16,9 @@ import BudgetWidget from '../components/BudgetWidget';
 import SavingsTracker from '../components/SavingsTracker';
 import InsightsPanel from '../components/InsightsPanel';
 import TopActions from '../components/TopActions';
+import ImpactOverview from '../components/ImpactOverview';
+import WhatIfSimulator from '../components/WhatIfSimulator';
+import OptimizeDecision from '../components/OptimizeDecision';
 
 export default function Dashboard({ activeSection }) {
   const [costData, setCostData] = useState(null);
@@ -29,6 +32,8 @@ export default function Dashboard({ activeSection }) {
   const [insightData, setInsightData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  const [isDecisionOpen, setIsDecisionOpen] = useState(false);
 
   useEffect(() => {
     loadAllData();
@@ -78,70 +83,69 @@ export default function Dashboard({ activeSection }) {
     }
   };
 
+  // ── LOADING STATE SKELETON ──
+  if (loading && !costData) {
+    return (
+      <div className="animate-fade-in dashboard-full">
+        <div className="dashboard-grid-3">
+           <div className="skeleton-loading" style={{ height: '140px' }} />
+           <div className="skeleton-loading" style={{ height: '140px' }} />
+           <div className="skeleton-loading" style={{ height: '140px' }} />
+        </div>
+        <div className="dashboard-grid" style={{ marginTop: '20px' }}>
+           <div className="skeleton-loading" style={{ height: '400px' }} />
+           <div className="skeleton-loading" style={{ height: '400px' }} />
+        </div>
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div style={{ padding: 40, textAlign: 'center' }}>
         <div style={{ fontSize: '2rem', marginBottom: 16 }}>⚠️</div>
         <h2 style={{ color: '#ef4444', marginBottom: 8 }}>Connection Error</h2>
         <p style={{ color: '#94a3b8', marginBottom: 20 }}>{error}</p>
-        <button className="btn btn-primary" onClick={loadAllData}>Retry</button>
+        <button className="btn btn-primary glow-button" onClick={loadAllData}>Retry</button>
       </div>
     );
   }
 
   // Render based on active section
-  if (activeSection === 'forecast') {
-    return (
-      <div className="animate-fade-in">
-        <ForecastChart forecastData={forecastData} />
-      </div>
-    );
-  }
-
-  if (activeSection === 'anomalies') {
-    return (
-      <div className="animate-fade-in">
-        <AnomalyPanel anomalyData={anomalyData} />
-      </div>
-    );
-  }
-
-  if (activeSection === 'resources') {
-    return (
-      <div className="animate-fade-in">
-        <IdleResources resourceData={resourceData} />
-      </div>
-    );
-  }
-
-  if (activeSection === 'recommendations') {
-    return (
-      <div className="animate-fade-in">
-        <Recommendations recData={recData} />
-      </div>
-    );
-  }
-
-  if (activeSection === 'budget') {
-    return (
-      <div className="animate-fade-in" style={{ maxWidth: 600 }}>
-        <BudgetWidget budgetData={budgetData} onSetBudget={handleSetBudget} />
-      </div>
-    );
-  }
-
-  if (activeSection === 'insights') {
-    return (
-      <div className="animate-fade-in">
-        <InsightsPanel insightData={insightData} />
-      </div>
-    );
-  }
+  if (activeSection === 'forecast') return <div className="animate-fade-in"><ForecastChart forecastData={forecastData} /></div>;
+  if (activeSection === 'anomalies') return <div className="animate-fade-in"><AnomalyPanel anomalyData={anomalyData} /></div>;
+  if (activeSection === 'resources') return <div className="animate-fade-in"><IdleResources resourceData={resourceData} /></div>;
+  if (activeSection === 'recommendations') return <div className="animate-fade-in"><Recommendations recData={recData} /></div>;
+  if (activeSection === 'budget') return <div className="animate-fade-in" style={{ maxWidth: 600 }}><BudgetWidget budgetData={budgetData} onSetBudget={handleSetBudget} /></div>;
+  if (activeSection === 'insights') return <div className="animate-fade-in"><InsightsPanel insightData={insightData} /></div>;
 
   // Default: full dashboard view
   return (
     <div className="animate-fade-in">
-      {/* Top Stats */}
+      
+      {/* ── Premium Sticky Header Header ── */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+         <h1 style={{ fontSize: '1.8rem', fontWeight: 800 }}>FinOps Intelligence</h1>
+         <button 
+           className="btn btn-primary glow-button" 
+           style={{ padding: '12px 24px', fontSize: '1.05rem', fontWeight: 700 }}
+           onClick={() => setIsDecisionOpen(true)}
+         >
+           ✨ Optimize My Cloud
+         </button>
+      </div>
+
+      <OptimizeDecision 
+        isOpen={isDecisionOpen} 
+        onClose={() => setIsDecisionOpen(false)} 
+        recData={recData} 
+        resourceData={resourceData} 
+      />
+
+      {/* Row 1: Impact Overview */}
+      <ImpactOverview resourceData={resourceData} savingsData={savingsData} />
+
+      {/* Row 2: Top Stats */}
       <CostOverview
         costData={costData}
         savings={savingsData}
@@ -149,36 +153,34 @@ export default function Dashboard({ activeSection }) {
         forecast={forecastData}
       />
 
-      {/* Row 1: Cost Chart + Breakdown */}
+      {/* Row 3: Cost Chart + Breakdown */}
       <div className="dashboard-grid">
         <CostChart dailyCosts={costData?.daily_costs} />
         <CostBreakdown breakdown={breakdown} />
       </div>
 
-      {/* Row 2: Forecast */}
+      {/* Row 4: Forecast */}
       <ForecastChart forecastData={forecastData} />
 
-      {/* Row 3: Top Actions + Anomalies */}
-      <div className="dashboard-grid" style={{ marginTop: 20 }}>
-        <TopActions recommendations={recData?.recommendations} />
+      {/* Row 5: What-If Simulator + Anomalies */}
+      <div className="dashboard-grid" style={{ marginTop: 24 }}>
+        <WhatIfSimulator 
+           currentMonthlyCost={costData?.total} 
+           totalIdleInstances={resourceData?.idle?.length || 0}
+           idleResourceWaste={resourceData?.idle?.reduce((acc, curr) => acc + curr.monthly_waste, 0) || 0}
+        />
         <AnomalyPanel anomalyData={anomalyData} />
       </div>
 
-      {/* Row 4: Budget + Savings */}
-      <div className="dashboard-grid-2" style={{ marginTop: 4 }}>
+      {/* Row 6: Budget + Insights */}
+      <div className="dashboard-grid-2" style={{ marginTop: 24 }}>
         <BudgetWidget budgetData={budgetData} onSetBudget={handleSetBudget} />
-        <SavingsTracker savingsData={savingsData} />
-      </div>
-
-      {/* Row 5: Idle Resources */}
-      <div style={{ marginTop: 4 }}>
-        <IdleResources resourceData={resourceData} />
-      </div>
-
-      {/* Row 6: Recommendations + Insights */}
-      <div className="dashboard-grid" style={{ marginTop: 20 }}>
-        <Recommendations recData={recData} />
         <InsightsPanel insightData={insightData} />
+      </div>
+
+      {/* Row 7: Recommendations */}
+      <div style={{ marginTop: 24 }}>
+        <Recommendations recData={recData} />
       </div>
     </div>
   );

@@ -611,3 +611,76 @@ table .mono {
   border-color: var(--success);
   color: var(--success);
 }
+
+/* ── Premium Micro-interactions ────────────────────── */
+.hover-card {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.hover-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+.glow-button {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.glow-button:hover {
+  box-shadow: 0 0 25px rgba(102, 126, 234, 0.8);
+  transform: translateY(-2px);
+}
+
+.glow-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* ── Skeleton Loading ──────────────────────────────── */
+.skeleton-loading {
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    var(--bg-card-hover) 50%,
+    var(--bg-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonLoad 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes skeletonLoad {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+  height: 16px;
+  margin-bottom: 8px;
+  width: 80%;
+}
+.skeleton-title {
+  height: 24px;
+  margin-bottom: 16px;
+  width: 40%;
+}
+.skeleton-chart {
+  height: 200px;
+  width: 100%;
+}
