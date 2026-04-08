@@ -417,8 +417,14 @@ def seed_database_if_empty():
         avg_monthly = sum(monthly_totals.values()) / max(len(monthly_totals), 1)
         budget_limit = round(avg_monthly * 1.1, 2)  # 10% above average
 
+        # Ensure user 1 exists to satisfy foreign key constraint
         conn.execute(
-            "INSERT INTO budgets (user_id, monthly_limit, alert_threshold) VALUES (?, ?, ?)",
+            "INSERT OR IGNORE INTO users (id, email, full_name, password_hash) VALUES (?, ?, ?, ?)",
+            (1, "demo@finops.ai", "Demo User", "$2b$12$xyz"),
+        )
+        
+        conn.execute(
+            "INSERT OR REPLACE INTO budgets (user_id, monthly_limit, alert_threshold) VALUES (?, ?, ?)",
             (1, budget_limit, 80.0),
         )
 
