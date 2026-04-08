@@ -1,0 +1,35 @@
+# ── Python ─────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.env
+venv/
+env/
+
+# ── Database ───────────────────────
+*.db
+*.sqlite3
+
+# ── Node / Frontend ────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ── IDE ────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ─────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Test / Temp ────────────────────
+backend/test_api.py
+*.log
