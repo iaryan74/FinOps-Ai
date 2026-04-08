@@ -46,6 +46,19 @@ export default function App() {
       
       <main className="main-content">
         <Dashboard activeSection={activeSection} />
+        
+        {/* Global Footer attribution */}
+        <footer style={{ 
+          marginTop: '60px', 
+          paddingTop: '30px',
+          paddingBottom: '20px', 
+          borderTop: '1px solid var(--border-subtle)', 
+          textAlign: 'center', 
+          color: 'var(--text-muted)', 
+          fontSize: '0.85rem' 
+        }}>
+          Built with precision by <a href="https://github.com/iaryan74" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 600 }}>Aryan</a> &copy; {new Date().getFullYear()}
+        </footer>
       </main>
     </div>
   );
