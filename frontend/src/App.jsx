@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './pages/Dashboard';
@@ -16,13 +16,34 @@ const sectionTitles = {
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
   const current = sectionTitles[activeSection] || sectionTitles.dashboard;
 
   return (
     <div className="app-layout">
-      <Sidebar activeSection={activeSection} onNavigate={setActiveSection} />
-      <Header title={current.title} subtitle={current.subtitle} />
+      <Sidebar 
+         activeSection={activeSection} 
+         onNavigate={(id) => { setActiveSection(id); setIsMobileOpen(false); }} 
+         isMobileOpen={isMobileOpen}
+         setMobileOpen={setIsMobileOpen}
+      />
+      
+      <Header 
+         title={current.title} 
+         subtitle={current.subtitle} 
+         theme={theme} 
+         toggleTheme={toggleTheme}
+         toggleMobileMenu={() => setIsMobileOpen(true)}
+      />
+      
       <main className="main-content">
         <Dashboard activeSection={activeSection} />
       </main>
