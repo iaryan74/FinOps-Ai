@@ -13,8 +13,8 @@ export default function OptimizeDecision({ isOpen, onClose, recData, resourceDat
   const totalActions = (idleCount > 0 ? 1 : 0) + recs.length;
 
   return (
-    <div style={overlayStyle}>
-      <div style={modalStyle} className="animate-fade-up">
+    <div style={overlayStyle} onClick={onClose}>
+      <div style={modalStyle} className="animate-fade-up" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div style={headerStyle}>
           <div>
@@ -80,17 +80,25 @@ export default function OptimizeDecision({ isOpen, onClose, recData, resourceDat
               </div>
             </div>
             
-            <button 
-              className="btn btn-primary glow-button" 
-              style={{ padding: '16px 32px', fontSize: '1.1rem', borderRadius: 'var(--radius-md)' }}
-              onClick={() => {
-                alert('In a production environment, this would execute AWS API automation workflows.');
-                onClose();
-              }}
-              disabled={totalActions === 0}
-            >
-              Execute Optimizations 🚀
-            </button>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+              <button 
+                onClick={onClose} 
+                style={{ background: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)', padding: '8px 16px', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontSize: '0.9rem' }}
+              >
+                Close
+              </button>
+              <button 
+                className="btn btn-primary glow-button" 
+                style={{ padding: '16px 32px', fontSize: '1.1rem', borderRadius: 'var(--radius-md)' }}
+                onClick={() => {
+                  alert('In a production environment, this would execute AWS API automation workflows.');
+                  onClose();
+                }}
+                disabled={totalActions === 0}
+              >
+                Execute Optimizations 🚀
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -110,11 +118,11 @@ const overlayStyle = {
 
 const modalStyle = {
   background: 'var(--bg-card)',
-  width: '100%', maxWidth: '650px',
+  width: '90%', maxWidth: '650px',
+  maxHeight: '90vh',
   borderRadius: 'var(--radius-lg)',
   border: '1px solid var(--border-accent)',
   boxShadow: 'var(--shadow-lg), 0 0 40px rgba(102, 126, 234, 0.15)',
-  overflow: 'hidden',
   display: 'flex', flexDirection: 'column'
 };
 
@@ -133,7 +141,8 @@ const closeButtonStyle = {
 };
 
 const contentStyle = {
-  padding: '32px'
+  padding: '32px',
+  overflowY: 'auto'
 };
 
 const listStyle = {
@@ -164,7 +173,8 @@ const savingsStyle = {
 };
 
 const footerStyle = {
-  marginTop: '32px', paddingTop: '24px',
+  marginTop: '24px', paddingTop: '24px',
   borderTop: '1px solid var(--border-subtle)',
-  display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end'
+  display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+  flexWrap: 'wrap', gap: '16px'
 };
