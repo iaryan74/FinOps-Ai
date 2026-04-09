@@ -1,8 +1,22 @@
 import { Download, Sun, Moon, Menu } from 'lucide-react';
+import api from '../api/client';
 
 export default function Header({ title, subtitle, theme, toggleTheme, toggleMobileMenu }) {
-  const handleExport = () => {
-    window.open('http://localhost:8000/export/csv', '_blank');
+  const handleExport = async () => {
+    try {
+      const response = await api.get('/export/csv', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'cloud_costs_report.csv');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Failed to export CSV. Please try again.');
+    }
   };
 
   return (
